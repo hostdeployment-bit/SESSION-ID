@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,19 +14,29 @@
   <style>
     :root {
       --gold: #d4af37;
-      --gold-light: #f5d77a;
+      --gold-light: #ffe28a;
       --gold-dim: rgba(212,175,55,0.12);
+
       --red: #8b0000;
-      --red-light: #c1121f;
-      --dark: #0a0404;
+      --red-light: #ff1744;
+
+      --purple: #7b2ff7;
+      --blue: #00c6ff;
+      --cyan: #00ffe5;
+
+      --dark: #050101;
       --text: #fff5f5;
-      --gray: rgba(220,200,200,0.65);
+      --gray: rgba(220,200,200,0.72);
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -33,201 +44,418 @@
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: var(--dark);
+      flex-direction: column;
       padding: 90px 20px 40px;
       overflow-x: hidden;
       position: relative;
+      background:
+        radial-gradient(circle at top left, rgba(123,47,247,0.18), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(0,198,255,0.15), transparent 35%),
+        radial-gradient(circle at center, rgba(255,0,85,0.08), transparent 40%),
+        #050101;
     }
 
-    /* Background atmosphere */
+    /* Animated Aurora */
     body::before {
       content: '';
       position: fixed;
-      inset: 0;
+      inset: -20%;
       background:
-        radial-gradient(ellipse 70% 55% at 50% 0%, rgba(139,0,0,0.5) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 40% at 90% 90%, rgba(212,175,55,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 40% at 10% 70%, rgba(92,0,0,0.25) 0%, transparent 55%);
-      animation: atmoShift 10s ease-in-out infinite alternate;
-      pointer-events: none;
+        radial-gradient(circle at 20% 20%, rgba(255,0,85,0.15), transparent 25%),
+        radial-gradient(circle at 80% 30%, rgba(0,198,255,0.13), transparent 25%),
+        radial-gradient(circle at 40% 80%, rgba(123,47,247,0.15), transparent 25%);
+      filter: blur(60px);
+      animation: aurora 15s linear infinite alternate;
       z-index: 0;
+      pointer-events: none;
     }
 
-    @keyframes atmoShift {
-      from { opacity: 0.8; }
-      to   { opacity: 1; }
+    @keyframes aurora {
+      0% {
+        transform: translateX(-30px) translateY(-20px) scale(1);
+      }
+      100% {
+        transform: translateX(30px) translateY(20px) scale(1.08);
+      }
     }
 
-    /* Grain texture */
+    /* Noise Texture */
     body::after {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      opacity: 0.4;
       pointer-events: none;
-      opacity: 0.5;
       z-index: 1;
     }
 
-    /* ── NAVBAR ── */
+    /* Floating particles */
+    .particles span {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      animation: float 10s linear infinite;
+      z-index: 1;
+    }
+
+    .particles span:nth-child(1) { left: 10%; top: 90%; animation-duration: 12s; }
+    .particles span:nth-child(2) { left: 25%; top: 100%; animation-duration: 9s; }
+    .particles span:nth-child(3) { left: 40%; top: 95%; animation-duration: 11s; }
+    .particles span:nth-child(4) { left: 60%; top: 100%; animation-duration: 8s; }
+    .particles span:nth-child(5) { left: 80%; top: 95%; animation-duration: 13s; }
+
+    @keyframes float {
+      from {
+        transform: translateY(0px) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* NAVBAR */
     .navbar {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      padding: 0 24px;
-      height: 56px;
+      height: 62px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(14px) saturate(1.5);
-      border-bottom: 1px solid rgba(212,175,55,0.2);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(18px) saturate(1.8);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       z-index: 1000;
+      overflow: hidden;
     }
 
-    .navbar::after {
+    .navbar::before {
       content: '';
       position: absolute;
-      bottom: 0; left: 15%; right: 15%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent);
+      width: 200%;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        var(--cyan),
+        var(--purple),
+        transparent
+      );
+      animation: navGlow 6s linear infinite;
+      bottom: 0;
     }
 
-    .navbar .brand {
-      font-family: 'Cinzel', serif;
-      font-weight: 900;
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, var(--gold-light), var(--red-light), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    @keyframes navGlow {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0%); }
+    }
+
+    .brand {
       text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
       display: flex;
       align-items: center;
-      gap: 9px;
-    }
+      gap: 10px;
 
-    .navbar .brand i {
-      background: linear-gradient(135deg, var(--gold), var(--red-light));
+      background: linear-gradient(
+        90deg,
+        #fff,
+        var(--gold-light),
+        #ff5ea8,
+        var(--cyan)
+      );
+
+      background-size: 300% auto;
+      animation: textShine 6s linear infinite;
+
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
+    }
+
+    @keyframes textShine {
+      to { background-position: 300% center; }
+    }
+
+    .brand i {
       font-size: 1rem;
     }
 
-    /* ── CARD ── */
+    /* CARD */
     .pair-card {
       position: relative;
-      z-index: 2;
-      max-width: 420px;
+      z-index: 5;
       width: 100%;
-      padding: 44px 36px;
-      border-radius: 20px;
-      border: 1px solid rgba(212,175,55,0.22);
-      background: rgba(5,2,2,0.78);
-      backdrop-filter: blur(20px) saturate(1.3);
+      max-width: 430px;
+
+      padding: 45px 35px;
+      border-radius: 28px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.06),
+          rgba(255,255,255,0.02)
+        );
+
+      backdrop-filter: blur(22px) saturate(1.5);
+
+      border: 1px solid rgba(255,255,255,0.1);
+
       box-shadow:
-        0 0 0 1px rgba(139,0,0,0.15),
-        0 20px 60px rgba(0,0,0,0.8),
-        0 0 80px rgba(212,175,55,0.06);
-      text-align: center;
-      animation: cardIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+        0 0 0 1px rgba(255,255,255,0.03),
+        0 10px 40px rgba(0,0,0,0.7),
+        0 0 60px rgba(123,47,247,0.15),
+        0 0 100px rgba(0,198,255,0.08);
+
+      overflow: hidden;
+
+      animation: cardIn .8s cubic-bezier(.22,1,.36,1);
     }
 
     @keyframes cardIn {
-      from { opacity: 0; transform: translateY(24px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
-    /* Corner ornaments */
-    .pair-card::before, .pair-card::after {
+    /* Rotating border */
+    .pair-card::before {
       content: '';
       position: absolute;
-      width: 20px;
-      height: 20px;
-      border-color: rgba(212,175,55,0.5);
-      border-style: solid;
-    }
-    .pair-card::before {
-      top: 10px; left: 10px;
-      border-width: 2px 0 0 2px;
-      border-radius: 3px 0 0 0;
-    }
-    .pair-card::after {
-      bottom: 10px; right: 10px;
-      border-width: 0 2px 2px 0;
-      border-radius: 0 0 3px 0;
+      width: 180%;
+      height: 180%;
+      background:
+        conic-gradient(
+          from 180deg,
+          transparent,
+          rgba(255,255,255,0.04),
+          var(--gold),
+          transparent,
+          var(--cyan),
+          transparent
+        );
+      animation: rotate 8s linear infinite;
+      top: -40%;
+      left: -40%;
+      z-index: -2;
     }
 
-    /* Top glow line */
+    .pair-card::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 26px;
+      background: rgba(5,1,1,0.93);
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .card-glow-line {
       position: absolute;
-      top: 0; left: 12%; right: 12%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.55), transparent);
+      top: 0;
+      left: 12%;
+      right: 12%;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--cyan),
+        var(--gold),
+        transparent
+      );
+      filter: blur(0.5px);
     }
 
-    /* Card title */
-    .pair-card h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.15rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      background: linear-gradient(90deg, var(--gold-light), var(--red-light), var(--gold));
+    /* Logo circle */
+    .logo-circle {
+      width: 85px;
+      height: 85px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.08),
+          rgba(255,255,255,0.02)
+        );
+
+      border: 1px solid rgba(255,255,255,0.1);
+
+      box-shadow:
+        0 0 30px rgba(255,255,255,0.05),
+        inset 0 0 20px rgba(255,255,255,0.04);
+
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-circle::before {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background: conic-gradient(
+        transparent,
+        var(--gold),
+        transparent,
+        var(--cyan),
+        transparent
+      );
+      animation: rotate 5s linear infinite;
+    }
+
+    .logo-circle::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: #0b0505;
+    }
+
+    .logo-circle i {
+      position: relative;
+      z-index: 2;
+      font-size: 2rem;
+
+      background: linear-gradient(
+        135deg,
+        var(--gold-light),
+        #ff5ea8,
+        var(--cyan)
+      );
+
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
     }
 
-    .pair-card > p {
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+
+      background: linear-gradient(
+        90deg,
+        #fff,
+        var(--gold-light),
+        #ff5ea8,
+        var(--cyan)
+      );
+
+      background-size: 300% auto;
+      animation: textShine 8s linear infinite;
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
       color: var(--gray);
-      font-size: 0.9rem;
-      letter-spacing: 0.04em;
-      margin-bottom: 28px;
+      font-size: 0.92rem;
+      margin-bottom: 24px;
+      letter-spacing: .04em;
     }
 
-    /* Divider */
     .divider {
-      width: 50px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
-      margin: 0 auto 24px;
+      width: 80px;
+      height: 3px;
+      border-radius: 20px;
+      margin: 0 auto 26px;
+
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        var(--cyan),
+        transparent
+      );
     }
 
-    /* Label */
     label {
       display: block;
-      font-weight: 700;
-      font-size: 0.82rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
       text-align: left;
-      margin-bottom: 8px;
-      color: rgba(212,175,55,0.75);
+      margin-bottom: 10px;
+
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+
+      color: rgba(255,255,255,0.7);
     }
 
-    /* Input */
+    /* Input wrapper */
+    .input-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-wrap i {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.45);
+      font-size: .95rem;
+    }
+
     input {
       width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(212,175,55,0.28);
-      background: rgba(139,0,0,0.12);
+      padding: 14px 16px 14px 42px;
+
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.04),
+          rgba(255,255,255,0.02)
+        );
+
       color: var(--text);
+
       font-family: 'Rajdhani', sans-serif;
       font-size: 1rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: .05em;
+
       outline: none;
-      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+
+      transition: .3s ease;
     }
 
     input::placeholder {
@@ -235,160 +463,329 @@
     }
 
     input:focus {
-      border-color: rgba(212,175,55,0.6);
-      background: rgba(139,0,0,0.2);
-      box-shadow: 0 0 20px rgba(212,175,55,0.1);
+      border-color: rgba(0,198,255,0.6);
+
+      box-shadow:
+        0 0 0 3px rgba(0,198,255,0.08),
+        0 0 25px rgba(0,198,255,0.12);
+
+      transform: translateY(-1px);
     }
 
-    /* Pair button */
+    /* Button */
     .pair-btn {
-      position: relative;
       width: 100%;
-      padding: 13px;
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 10px;
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.15em;
-      color: #fff;
-      background: transparent;
+      position: relative;
+
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+
       cursor: pointer;
       overflow: hidden;
-      margin-bottom: 18px;
-      transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+
+      font-family: 'Cinzel', serif;
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ff0055,
+          #7b2ff7,
+          #00c6ff
+        );
+
+      background-size: 300% auto;
+
+      animation: buttonFlow 6s linear infinite;
+
+      transition: .3s ease;
+
+      box-shadow:
+        0 10px 30px rgba(123,47,247,0.25),
+        0 0 30px rgba(0,198,255,0.12);
+    }
+
+    @keyframes buttonFlow {
+      to {
+        background-position: 300% center;
+      }
+    }
+
+    .pair-btn:hover {
+      transform: translateY(-3px) scale(1.01);
+
+      box-shadow:
+        0 15px 40px rgba(123,47,247,0.35),
+        0 0 35px rgba(0,198,255,0.18);
+    }
+
+    .pair-btn:active {
+      transform: scale(.98);
     }
 
     .pair-btn::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(139,0,0,0.8), rgba(212,175,55,0.3));
-      z-index: 0;
-      transition: opacity 0.25s;
-    }
-
-    .pair-btn::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
+      top: 0;
+      left: -120%;
       width: 60%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-      transition: left 0.5s ease;
-      z-index: 1;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,0.25),
+          transparent
+        );
+
+      transition: .6s;
     }
 
-    .pair-btn:hover {
-      border-color: var(--gold);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.2);
+    .pair-btn:hover::before {
+      left: 150%;
     }
 
-    .pair-btn:hover::after { left: 140%; }
-    .pair-btn:active { transform: translateY(0) scale(0.98); }
-
-    .pair-btn span { position: relative; z-index: 2; }
-
-    /* Channel button */
+    /* Channel */
     .channel-btn {
+      margin: 22px auto 28px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(212,175,55,0.08);
-      color: var(--gold-light);
-      border: 1px solid rgba(212,175,55,0.25);
-      border-radius: 30px;
-      padding: 9px 20px;
+      gap: 10px;
+
       text-decoration: none;
-      font-family: 'Rajdhani', sans-serif;
+
+      padding: 10px 22px;
+      border-radius: 40px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(37,211,102,0.2),
+          rgba(0,198,255,0.15)
+        );
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      font-size: .88rem;
       font-weight: 700;
-      font-size: 0.9rem;
-      letter-spacing: 0.06em;
+      letter-spacing: .08em;
       text-transform: uppercase;
-      margin-bottom: 28px;
-      transition: all 0.25s;
+
+      transition: .3s ease;
     }
 
     .channel-btn:hover {
-      background: rgba(212,175,55,0.15);
-      border-color: rgba(212,175,55,0.5);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37,211,102,0.18);
     }
 
-    .channel-btn i { color: #25d366; }
-
-    /* Output area */
-    #pair {
-      min-height: 20px;
-      font-family: 'Rajdhani', sans-serif;
+    .channel-btn i {
+      color: #25d366;
       font-size: 1rem;
-      letter-spacing: 0.04em;
     }
 
-    /* Code display */
-    .code-box {
-      display: inline-block;
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: 1px solid rgba(212,175,55,0.35);
-      background: rgba(212,175,55,0.06);
-      cursor: pointer;
-      transition: all 0.25s;
-      font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gold-light);
-      letter-spacing: 0.15em;
-      text-shadow: 0 0 15px rgba(212,175,55,0.4);
-    }
-
-    .code-box:hover {
-      background: rgba(212,175,55,0.12);
-      border-color: var(--gold);
-      box-shadow: 0 0 20px rgba(212,175,55,0.2);
+    /* Output */
+    #pair {
+      min-height: 22px;
     }
 
     .code-label {
       display: block;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+
+      font-size: .78rem;
+      letter-spacing: .15em;
       text-transform: uppercase;
-      color: rgba(212,175,55,0.5);
-      margin-bottom: 8px;
+
+      color: rgba(255,255,255,0.55);
     }
 
-    .msg-error { color: #ff6b6b; font-weight: 600; }
-    .msg-warn  { color: var(--gold); font-weight: 600; }
-    .msg-wait  { color: rgba(212,175,55,0.7); font-weight: 600; }
+    .code-box {
+      position: relative;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      padding: 14px 22px;
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.08),
+          rgba(255,255,255,0.03)
+        );
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+
+      transition: .3s ease;
+
+      overflow: hidden;
+    }
+
+    .code-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,0,85,0.15),
+          rgba(0,198,255,0.12)
+        );
+
+      opacity: 0;
+      transition: .3s;
+    }
+
+    .code-box:hover::before {
+      opacity: 1;
+    }
+
+    .code-box:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 10px 35px rgba(0,198,255,0.12),
+        0 0 25px rgba(255,0,85,0.08);
+    }
+
+    .code-box span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .msg-error {
+      color: #ff6b81;
+      font-weight: 700;
+    }
+
+    .msg-warn {
+      color: #ffd166;
+      font-weight: 700;
+    }
+
+    .msg-wait {
+      color: #7cecff;
+      font-weight: 700;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 22px;
+      font-size: .8rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: .08em;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media(max-width: 500px) {
+      .pair-card {
+        padding: 38px 24px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 1.08rem;
+      }
+
+      .brand {
+        font-size: .92rem;
+      }
+
+      .code-box {
+        font-size: 1rem;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- particles -->
+  <div class="particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="https://github.com/popkidmain" class="brand">
-      <i class="fas fa-robot"></i> POPKID PAIR-MD
+      <i class="fas fa-crown"></i>
+      POPKID PAIR-MD
     </a>
   </nav>
 
+  <!-- CARD -->
   <div class="pair-card">
+
     <div class="card-glow-line"></div>
 
+    <div class="logo-circle">
+      <i class="fab fa-whatsapp"></i>
+    </div>
+
     <h1>POPKID — PAIRING CODE</h1>
-    <p>Enter your WhatsApp number without the + sign</p>
+
+    <p class="subtitle">
+      Enter your WhatsApp number without the + sign
+    </p>
+
     <div class="divider"></div>
 
     <label for="number">Phone Number</label>
-    <input type="text" id="number" placeholder="e.g., 2541234567" />
-    <button id="submit" class="pair-btn"><span>GET CODE</span></button>
 
-    <a href="https://whatsapp.com/channel/0029Vb70ySJHbFV91PNKuL3T" target="_blank" class="channel-btn">
-      <i class="fab fa-whatsapp"></i> Channel
-    </a>
+    <div class="input-wrap">
+      <i class="fas fa-phone"></i>
+      <input type="text" id="number" placeholder="e.g. 254712345678" />
+    </div>
+
+    <button id="submit" class="pair-btn">
+      GET CODE
+    </button>
+
+    <center>
+      <a href="https://whatsapp.com/channel/0029Vb70ySJHbFV91PNKuL3T"
+         target="_blank"
+         class="channel-btn">
+
+        <i class="fab fa-whatsapp"></i>
+        WhatsApp Channel
+      </a>
+    </center>
 
     <div id="pair"></div>
+
+    <div class="footer">
+      POWERED BY POPKID MD
+    </div>
+
   </div>
 
   <script>
@@ -399,42 +796,89 @@
     async function Copy() {
       let obj = document.getElementById("copy");
       let originalText = obj.dataset.code;
+
       await navigator.clipboard.writeText(originalText);
-      obj.querySelector('.code-val').textContent = "COPIED ✓";
-      obj.style.color = "var(--gold-light)";
+
+      obj.querySelector('.code-val').innerHTML =
+        '<i class="fas fa-check-circle"></i> COPIED';
+
       setTimeout(() => {
         obj.querySelector('.code-val').textContent = originalText;
-      }, 600);
+      }, 800);
     }
 
     b.addEventListener("click", async (e) => {
       e.preventDefault();
 
+      b.disabled = true;
+      b.innerHTML =
+        '<i class="fas fa-spinner fa-spin"></i> PROCESSING';
+
       if (!c.value) {
-        a.innerHTML = '<p class="msg-warn">Enter your WhatsApp number with a country code</p>';
+        a.innerHTML =
+          '<p class="msg-warn">' +
+          '<i class="fas fa-circle-exclamation"></i> ' +
+          'Enter your WhatsApp number with country code' +
+          '</p>';
+
+        b.disabled = false;
+        b.innerHTML = 'GET CODE';
         return;
       }
 
       if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<p class="msg-warn">Invalid number format</p>';
+        a.innerHTML =
+          '<p class="msg-warn">' +
+          '<i class="fas fa-triangle-exclamation"></i> ' +
+          'Invalid number format' +
+          '</p>';
+
+        b.disabled = false;
+        b.innerHTML = 'GET CODE';
         return;
       }
 
       const bc = c.value.replace(/[^0-9]/g, "");
-      a.innerHTML = '<p class="msg-wait"><i class="fas fa-circle-notch fa-spin" style="margin-right:6px"></i>Please wait...</p>';
+
+      a.innerHTML =
+        '<p class="msg-wait">' +
+        '<i class="fas fa-circle-notch fa-spin"></i> ' +
+        'Generating your pairing code...' +
+        '</p>';
 
       try {
+
         let { data } = await axios.get(`/code?number=${bc}`);
+
         let code = data.code || "Service Unavailable";
 
         a.innerHTML =
           '<span class="code-label">Tap to copy</span>' +
+
           '<div id="copy" class="code-box" onclick="Copy()" data-code="' + code + '">' +
-            '<span class="code-val">' + code + '</span>' +
+
+          '<span class="code-val">' + code + '</span>' +
+
           '</div>';
 
       } catch (err) {
-        a.innerHTML = '<p class="msg-error"><i class="fas fa-triangle-exclamation" style="margin-right:6px"></i>Error connecting to server</p>';
+
+        a.innerHTML =
+          '<p class="msg-error">' +
+          '<i class="fas fa-wifi"></i> ' +
+          'Error connecting to server' +
+          '</p>';
+
+      }
+
+      b.disabled = false;
+      b.innerHTML = 'GET CODE';
+    });
+
+    // Enter key support
+    c.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        b.click();
       }
     });
   </script>
